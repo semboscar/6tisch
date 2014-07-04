@@ -84,6 +84,8 @@ class SimEngine(threading.Thread):
         # log
         log.info("thread {0} starting".format(self.name))
         
+        startTime = time.time()
+        
         while self.goOn:
             
             with self.dataLock: 
@@ -119,6 +121,9 @@ class SimEngine(threading.Thread):
                 
                 # wait a bit
                 time.sleep(self.simDelay)
+                
+                if time.time()-startTime>2:
+                    self.goOn=False
         
         # log
         log.info("thread {0} ends".format(self.name))

@@ -90,10 +90,16 @@ def main():
         setattr(settings,k,v)
     
     # instantiate a SimEngine object
-    simengine = SimEngine.SimEngine()
+    
+    for runNum in range(10):
+        print 'run {0}'.format(runNum)
+        simengine = SimEngine.SimEngine()
+        simengine.join()
+        simengine._instance      = None
+        simengine._init          = False
     
     # instantiate the GUI interface
-    gui       = SimGui.SimGui()
+    #gui       = SimGui.SimGui()
 
 if __name__=="__main__":
     main()
