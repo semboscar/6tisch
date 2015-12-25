@@ -143,6 +143,13 @@ def parseCliOptions():
         default    = 5.0,
         help       = '[otf] OTF housekeeping period (s).',
     )
+    # llds
+    parser.add_argument( '--lldsEnable',
+        dest       = 'lldsEnable',
+        type       = bool,
+        default    = [True,False],
+        help       = '[llds] llds enable (True/False).',
+    )
     # sixtop
     parser.add_argument( '--sixtopHousekeepingPeriod',
         dest       = 'sixtopHousekeepingPeriod',

@@ -845,26 +845,27 @@ class Mote(object):
             '''
             llds: choosing the TX cell right after DIR_RX cells
             '''
-            rxTimeslots = [ts for (ts,cell) in self.schedule.iteritems() if cell['dir']==self.DIR_RX and cell['neighbor']==neighbor]
-            if len(rxTimeslots)!=0:
-                txTsDistance = []
-                for i in range(len(rxTimeslots)):
-                    if i != 0:
-                        txTsDistance.append((rxTimeslots[i],rxTimeslots[i]-rxTimeslots[i-1]))
-                    else:
-                        txTsDistance.append((rxTimeslots[i],self.settings.slotframeLength+rxTimeslots[i]-rxTimeslots[-1]))
-                txTsDistance.sort(key=lambda ts: ts[1])
+            if self.settings.lldsEnable:
+                rxTimeslots = [ts for (ts,cell) in self.schedule.iteritems() if cell['dir']==self.DIR_RX and cell['neighbor']==neighbor]
+                if len(rxTimeslots)!=0:
+                    txTsDistance = []
+                    for i in range(len(rxTimeslots)):
+                        if i != 0:
+                            txTsDistance.append((rxTimeslots[i],rxTimeslots[i]-rxTimeslots[i-1]))
+                        else:
+                            txTsDistance.append((rxTimeslots[i],self.settings.slotframeLength+rxTimeslots[i]-rxTimeslots[-1]))
+                    txTsDistance.sort(key=lambda ts: ts[1])
 
-                lldTimeslots = []
-                while len(lldTimeslots)<numCells:
-                    for ts,distance in txTsDistance:
-                        timeslot = (ts+1)%self.settings.slotframeLength
-                        while (timeslot in availableTimeslots) == False and timeslot != ts:
-                            timeslot=(timeslot+1)%self.settings.slotframeLength
-                        lldTimeslots.append(timeslot)
-                        availableTimeslots.remove(timeslot)
-                availableTimeslots = lldTimeslots
-                availableTimeslots.append(0) # add one ts to extend the length of availableTimeslots
+                    lldTimeslots = []
+                    while len(lldTimeslots)<numCells:
+                        for ts,distance in txTsDistance:
+                            timeslot = (ts+1)%self.settings.slotframeLength
+                            while (timeslot in availableTimeslots) == False and timeslot != ts:
+                                timeslot=(timeslot+1)%self.settings.slotframeLength
+                            lldTimeslots.append(timeslot)
+                            availableTimeslots.remove(timeslot)
+                    availableTimeslots = lldTimeslots
+                    availableTimeslots.append(0) # add one ts to extend the length of availableTimeslots
             '''
             end of llds
             '''
@@ -956,28 +957,29 @@ class Mote(object):
         '''
         llds: remove the cell with longer latency
         '''
-        rxTimeslots = [ts for (ts,cell) in self.schedule.iteritems() if cell['dir']==self.DIR_RX and cell['neighbor']==neighbor]
-        txTimeslots = [ts for (ts,cell) in self.schedule.iteritems() if cell['dir']==self.DIR_TX and cell['neighbor']==neighbor]
+        if self.settings.lldsEnable:
+            rxTimeslots = [ts for (ts,cell) in self.schedule.iteritems() if cell['dir']==self.DIR_RX and cell['neighbor']==neighbor]
+            txTimeslots = [ts for (ts,cell) in self.schedule.iteritems() if cell['dir']==self.DIR_TX and cell['neighbor']==neighbor]
 
-        txTsDistance = []
-        for i in range(len(txTimeslots)):
-            distance = self.settings.slotframeLength
-            for j in range(len(rxTimeslots)):
-                if txTimeslots[i] > rxTimeslots[j]:
-                    if distance > txTimeslots[i] - rxTimeslots[j]:
-                        distance = txTimeslots[i] - rxTimeslots[j]
-                else:
-                    if distance > self.settings.slotframeLength + txTimeslots[i] - rxTimeslots[j]:
-                        distance = self.settings.slotframeLength + txTimeslots[i] - rxTimeslots[j]
-            txTsDistance.append((txTimeslots[i],distance))
-        txTsDistance.sort(key=lambda x: x[1], reverse=True)
+            txTsDistance = []
+            for i in range(len(txTimeslots)):
+                distance = self.settings.slotframeLength
+                for j in range(len(rxTimeslots)):
+                    if txTimeslots[i] > rxTimeslots[j]:
+                        if distance > txTimeslots[i] - rxTimeslots[j]:
+                            distance = txTimeslots[i] - rxTimeslots[j]
+                    else:
+                        if distance > self.settings.slotframeLength + txTimeslots[i] - rxTimeslots[j]:
+                            distance = self.settings.slotframeLength + txTimeslots[i] - rxTimeslots[j]
+                txTsDistance.append((txTimeslots[i],distance))
+            txTsDistance.sort(key=lambda x: x[1], reverse=True)
 
-        scheduleList = []
-        for i in range(len(txTsDistance)):
-            numTxAck = self.schedule[txTsDistance[i][0]]['numTxAck']
-            numTx    = self.schedule[txTsDistance[i][0]]['numTx']
-            cellPDR  = (float(numTxAck)+(self.getPDR(neighbor)*self.NUM_SUFFICIENT_TX))/(numTx+self.NUM_SUFFICIENT_TX)
-            scheduleList += [(txTsDistance[i][0],numTxAck,numTx,cellPDR)]
+            scheduleList = []
+            for i in range(len(txTsDistance)):
+                numTxAck = self.schedule[txTsDistance[i][0]]['numTxAck']
+                numTx    = self.schedule[txTsDistance[i][0]]['numTx']
+                cellPDR  = (float(numTxAck)+(self.getPDR(neighbor)*self.NUM_SUFFICIENT_TX))/(numTx+self.NUM_SUFFICIENT_TX)
+                scheduleList += [(txTsDistance[i][0],numTxAck,numTx,cellPDR)]
         '''
         end of llds
         '''
