@@ -66,8 +66,8 @@ class Mote(object):
     OTF_TRAFFIC_SMOOTHING              = 0.5
     #=== 6top
     #=== tsch
-    TSCH_QUEUE_SIZE                    = 50
-    TSCH_MAXTXRETRIES                  = 2    
+    TSCH_QUEUE_SIZE                    = 5
+    TSCH_MAXTXRETRIES                  = 50    
     #=== radio
     RADIO_MAXDRIFT                     = 30 # in ppm
     #=== battery

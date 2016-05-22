@@ -1,0 +1,12 @@
+For this simulations, we have increased que queue size, and reduced the maximum retries from the original Mote.py parameters:
+
+    TSCH_QUEUE_SIZE                    = 10
+    TSCH_MAXTXRETRIES                  = 5
+
+to:
+
+    TSCH_QUEUE_SIZE                    = 5
+    TSCH_MAXTXRETRIES                  = 50 
+
+
+sd
