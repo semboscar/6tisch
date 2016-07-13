@@ -1,3 +1,13 @@
+Existen 5 metodos de calendarización según el documento:
+-Static scheduling
+-Neighbor-to-neighbor scheduling
+-Remote monitoring and scheduling management
+-Hop-by-hop scheduling
+
+https://datatracker.ietf.org/doc/draft-ietf-6tisch-architecture/?include_text=1
+
+
+
 The 6TiSCH Simulator
 ====================
 
