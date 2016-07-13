@@ -1,8 +1,14 @@
+IPv6 sobre redes TSCH
+
+https://tools.ietf.org/html/draft-ietf-6tisch-terminology-07
+
+
 Existen 5 metodos de calendarización según el documento:
 -Static scheduling
 -Neighbor-to-neighbor scheduling
 -Remote monitoring and scheduling management
 -Hop-by-hop scheduling
+-Distributed scheduling (extra)
 
 https://datatracker.ietf.org/doc/draft-ietf-6tisch-architecture/?include_text=1
 
